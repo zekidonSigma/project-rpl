@@ -1,125 +1,326 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
 body {
-  font-family: 'Poppins', sans-serif;
   background: #f9fbfd;
+  color: #333;
   margin: 0;
 }
 
-.navbar {
-  background: #3a86ff;
-  color: white;
-  padding: 15px;
+/* ===================================================
+   LOGIN & REGISTER PAGE
+=================================================== */
+.login-container, 
+.register-container {
   display: flex;
-  justify-content: space-between;
-}
-
-.login-container {
-  width: 300px;
-  margin: 100px auto;
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-input, button {
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
+  margin-top: 160px;
 }
 
-button {
-  background: #3a86ff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.card {
+.login-card, 
+.register-card {
   background: white;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-h2 {
-    color: #007bff;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    color: #555;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.login-container, .register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.login-container .login-card,
-.register-container .register-card {
-    background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    width: 350px;
-    text-align: center;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  width: 350px;
+  text-align: center;
 }
 
 input {
-    width: 90%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: 0.2s ease-in-out;
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s ease-in-out;
 }
 
 input:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0,123,255,0.3);
 }
 
 button {
-    width: 95%;
-    padding: 12px;
-    border: none;
-    background-color: #339cff;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 15px;
-    transition: 0.3s;
+  width: 95%;
+  padding: 12px;
+  border: none;
+  background-color: #4a6cf7;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s;
 }
 
 button:hover {
-    background-color: #007bff;
+  background-color: #3a5ce3;
 }
 
 .error {
-    color: #d9534f;
-    font-size: 14px;
-    margin-top: 10px;
+  color: #d9534f;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .switch {
-    margin-top: 15px;
-    font-size: 14px;
+  margin-top: 15px;
+  font-size: 14px;
 }
 
 .switch a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .switch a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+}
+
+/* ===================================================
+   SIDEBAR (UNTUK ADMIN & SISWA)
+=================================================== */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #1e40af;
+  color: #fff;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 30px 20px;
+}
+
+.sidebar .logo {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sidebar .logo span {
+  color: #dfe7ff;
+}
+
+.sidebar a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  margin: 15px 0;
+  padding: 10px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #304de0;
+}
+
+.nav-link {
+  color: white;
+  font-weight: 500;
+  padding: 12px 25px;
+                border-radius: 8px;
+                margin: 4px 10px;
+                transition: 0.3s;
+            }
+
+.nav-link.active, .nav-link:hover {
+  background: #2563eb;
+  color: #fff;
+}
+/* ===================================================
+   MAIN CONTENT AREA (ADMIN & SISWA)
+=================================================== */
+.main, 
+.main-content {
+  margin-left: 260px;
+  padding: 40px;
+  background-color: #f6f8ff;
+  min-height: 100vh;
+  width: calc(100% - 260px);
+}
+
+/* ===================================================
+   TOPBAR (SISWA)
+=================================================== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  position: sticky;
+  top: 0;
+  background: #f9fbff;
+  z-index: 1000;
+}
+
+.welcome-text h2 {
+  color: #1b3cf3;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.welcome-text p {
+  color: #6c757d;
+  margin: 0;
+}
+
+/* ===================================================
+   PROFILE BOX (SISWA)
+=================================================== */
+.profile-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: 30px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-box:hover {
+  background: #eef3ff;
+}
+
+.profile-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a6cf7;
+}
+
+.profile-info span {
+  font-size: 14px;
+}
+
+.profile-info small {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ===================================================
+   CARD (ADMIN & SISWA)
+=================================================== */
+.card, 
+.card-eks, 
+.info-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 20px;
+}
+
+.card:hover, 
+.card-eks:hover, 
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Card Ekskul */
+.card-eks img {
+  height: 150px;
+  object-fit: cover;
+}
+
+.btn-daftar {
+  background-color: #4a6cf7;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  padding: 10px 16px;
+}
+
+.btn-daftar:hover {
+  background-color: #3a5ce3;
+}
+
+    .container {
+      margin-left: 250px;
+      padding-top: 40px;
+      padding-bottom: 60px;
+    }
+    h2 {
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-title {
+      color: #1e40af;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .badge {
+      font-size: 0.9rem;
+      background-color: #e0f2fe;
+      color: #0369a1;
+    }
+    .wrapper {
+      display: flex;
+    }
+
+/* ===================================================
+   ADMIN DASHBOARD KHUSUS
+=================================================== */
+.header h2 {
+  font-weight: 600;
+  color: #1b3cf3;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.info-card i {
+  font-size: 2rem;
+  color: #3b5bff;
+}
+
+.info-card h6 {
+  margin: 0;
+  color: #777;
+}
+
+.info-card h4 {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* ===================================================
+   TABEL (ADMIN)
+=================================================== */
+.table thead {
+  background-color: #3b5bff;
+  color: #fff;
+}
+
+.table tbody tr:hover {
+  background-color: #eef2ff;
 }
