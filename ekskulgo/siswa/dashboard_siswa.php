@@ -7,6 +7,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'siswa') {
 include '../config/connection.php';
 $id_user = $_SESSION['id_user'];
 
+$userQuery = mysqli_query($conn, "SELECT name, foto FROM users WHERE id_user = '$id_user'");
+$user = mysqli_fetch_assoc($userQuery);
+
+$fotoPath = "../assets/uploads/profile/" . (!empty($user['foto']) ? $user['foto'] : "default.jpg");
 
 $query = "
     SELECT e.id_ekskul, e.nama AS ekskul, e.hari, e.waktu, p.status
@@ -25,51 +29,6 @@ $result = mysqli_query($conn, $query);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        body {
-            background-color: #f6f9ff;
-            font-family: 'Poppins', sans-serif;
-            overflow-x: hidden;
-        }
-            .logo {
-                font-size: 1.6rem;
-                font-weight: 700;
-                text-align: center;
-                margin-bottom: 30px;
-            }
-            .logo span {
-                color: #60a5fa;
-            }
-        .main {
-            flex: 1;
-            padding: 30px;
-        }
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 20px 30px;
-            border-radius: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-        .welcome-text h2 {
-            color: #1e3a8a;
-            font-weight: 700;
-        }
-        .profile-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f1f5f9;
-            border-radius: 50px;
-            padding: 8px 15px;
-        }
-        .profile-img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
         .table-section {
             margin-top: 30px;
             background: white;
@@ -80,15 +39,6 @@ $result = mysqli_query($conn, $query);
         table {
             margin-top: 15px;
         }
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: white;
-        }
-        .status-Menunggu { background: #f59e0b; }
-        .status-Diterima { background: #16a34a; }
-        .status-Ditolak { background: #dc2626; }
     </style>
 </head>
 <body>
@@ -98,8 +48,8 @@ $result = mysqli_query($conn, $query);
         <div class="logo">Ekskul<span>Go</span></div>
         <nav class="nav flex-column px-2">
             <a href="dashboard_siswa.php" class="nav-link active"><i class="bi bi-house-door me-2"></i>Dashboard</a>
-            <a href="jadwal_ekskul.php" class="nav-link"><i class="bi bi-calendar-event me-2"></i>Jadwal</a>
-            <a href="daftar_ekskul.php" class="nav-link"><i class="bi bi-bookmarks me-2"></i>Ekskul</a>
+            <a href="jadwal_ekskul.php" class="nav-link"><i class="bi bi-calendar-event me-2"></i>Jadwal Ekskul</a>
+            <a href="daftar_ekskul.php" class="nav-link"><i class="bi bi-palette-fill me-2"></i>Daftar Ekskul</a>
             <a href="../logreg/logout.php" class="nav-link"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
         </nav>
     </aside>
@@ -110,17 +60,31 @@ $result = mysqli_query($conn, $query);
                 <h2>Selamat Datang, <?= htmlspecialchars($_SESSION['name']); ?>!</h2>
                 <p class="text-muted mb-0">Berikut daftar ekskul yang kamu daftarkan.</p>
             </div>
-            <div class="profile-box">
-                <img src="../assets/img/profile-default.png" class="profile-img" alt="Profile">
-                <div class="profile-info">
-                    <span class="fw-semibold"><?= htmlspecialchars($_SESSION['name']); ?></span><br>
-                    <small class="text-muted">Siswa</small>
+            <div>
+                <button id="userDropdownBtn" class="user-btn">
+                    <img src="<?= $fotoPath; ?>" alt="user" class="profile-img">
+                </button>
+                <div id="userDropdown" class="dropdown">
+                    <a href="profile-member.php" class="dropdown-item">Profile</a>
                 </div>
             </div>
         </div>
 
         <div class="table-section">
-            <h4 class="fw-semibold text-primary mb-3">Daftar Pendaftaran Ekskul</h4>
+            <h4 class="fw-semibold text-primary mb-3">Pendaftaran Ekskul</h4>
+
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php elseif (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
             <div class="table-responsive">
                 <table class="table table-bordered align-middle text-center">
                     <thead class="table-light">
@@ -129,23 +93,28 @@ $result = mysqli_query($conn, $query);
                             <th>Ekskul</th>
                             <th>Hari</th>
                             <th>Waktu</th>
-                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (mysqli_num_rows($result) > 0): 
                             $no = 1;
-                            while ($row = mysqli_fetch_assoc($result)):
-                                $statusClass = "status-" . ucfirst($row['status']);
-                        ?>
+                            while ($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
                             <td><?= $no++; ?></td>
                             <td><?= htmlspecialchars($row['ekskul']); ?></td>
                             <td><?= htmlspecialchars($row['hari']); ?></td>
                             <td><?= htmlspecialchars($row['waktu']); ?></td>
-                            <td><span class="status-badge <?= $statusClass; ?>"><?= htmlspecialchars($row['status']); ?></span></td>
-                            <td><a href="batalkan_pendaftaran.php?id=<?= $row['id_ekskul']; ?>" class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Batalkan</a></td>
+                            <td>
+                                <button 
+                                    class="btn btn-danger btn-sm btn-batal"
+                                    data-id="<?= $row['id_ekskul']; ?>" 
+                                    data-ekskul="<?= htmlspecialchars($row['ekskul']); ?>"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#batalModal">
+                                    <i class="bi bi-x-circle"></i> Batalkan
+                                </button>
+                            </td>
                         </tr>
                         <?php endwhile; else: ?>
                         <tr><td colspan="6" class="text-muted">Kamu belum mendaftar ekskul apa pun.</td></tr>
@@ -157,6 +126,45 @@ $result = mysqli_query($conn, $query);
     </main>
 </div>
 
+<div class="modal fade" id="batalModal" tabindex="-1" aria-labelledby="batalModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form action="batalkan_pendaftaran.php" method="GET">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger" id="batalModalLabel">
+            <i class="bi bi-exclamation-triangle"></i> Konfirmasi Pembatalan
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah kamu yakin ingin membatalkan pendaftaran ekskul <b id="namaEkskul"></b>?</p>
+          <input type="hidden" name="id" id="idEkskul">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+          <button type="submit" class="btn btn-danger">Ya, Batalkan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const namaEkskul = document.getElementById('namaEkskul');
+    const idEkskul = document.getElementById('idEkskul');
+
+    document.querySelectorAll('.btn-batal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const ekskul = btn.getAttribute('data-ekskul');
+            const id = btn.getAttribute('data-id');
+            namaEkskul.textContent = ekskul;
+            idEkskul.value = id;
+        });
+    });
+});
+</script>
 </body>
 </html>
